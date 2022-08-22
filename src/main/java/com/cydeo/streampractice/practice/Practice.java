@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Component
 public class Practice {
@@ -86,7 +87,7 @@ public class Practice {
     // Display all the employees' first names
     public static List<String> getAllEmployeesFirstName() {//--------------------->> 8.OK
 
-      return   employeeService.readAll().stream()
+        return employeeService.readAll().stream()
                 .map(Employee::getFirstName)
                 .collect(Collectors.toList());
 
@@ -94,9 +95,9 @@ public class Practice {
 
     // Display all the countries' names
     public static List<String> getAllCountryNames() { //--------------------->> 9.OK
-       return countryService.readAll().stream()
+        return countryService.readAll().stream()
                 .map(Country::getCountryName)
-               .collect(Collectors.toList());
+                .collect(Collectors.toList());
 
     }
 
@@ -130,33 +131,53 @@ public class Practice {
     }
 
     // Display the region of the IT department
-    public static Region getRegionOfITDepartment() throws Exception {
-        //TODO Implement the method
-        return new Region();
+    public static Region getRegionOfITDepartment() throws Exception {//--------------------->> 13.OK BUT review again???
+
+           List<Region> regions=     departmentService.readAll().stream()
+                .filter(department -> department.getDepartmentName().equals("IT"))
+                .map(department -> department.getLocation())
+                      .map(Location::getCountry)
+                      .map(country -> country.getRegion())
+                         .collect(Collectors.toList());
+
+
+           return regions.get(0);
     }
 
+
     // Display all the departments where the region of department is 'Europe'
-    public static List<Department> getAllDepartmentsWhereRegionOfCountryIsEurope() {
-        //TODO Implement the method
-        return new ArrayList<>();
+    public static List<Department> getAllDepartmentsWhereRegionOfCountryIsEurope() {//--------------------->> 14.OK
+
+       return departmentService.readAll().stream()
+                .filter(department -> department.getLocation().getCountry().getRegion().getRegionName().equals("Europe"))
+                .collect(Collectors.toList());
+
     }
 
     // Display if there is any employee with salary less than 1000. If there is none, the method should return true
-    public static boolean checkIfThereIsNoSalaryLessThan1000() {
-        //TODO Implement the method
-        return false;
+    public static boolean checkIfThereIsNoSalaryLessThan1000() {//--------------------->> 15.OK
+
+        return employeeService.readAll().stream()
+                .noneMatch(employee -> employee.getSalary() < 1000);
+
     }
 
     // Check if the salaries of all the employees in IT department are greater than 2000 (departmentName: IT)
-    public static boolean checkIfThereIsAnySalaryGreaterThan2000InITDepartment() {
-        //TODO Implement the method
-        return false;
+    public static boolean checkIfThereIsAnySalaryGreaterThan2000InITDepartment() {//--------------------->> 16.OK
+
+        return employeeService.readAll().stream()
+                .filter(employee -> employee.getDepartment().getDepartmentName().equals("IT"))
+                .allMatch(employee -> employee.getSalary() > 2000);
+
+
     }
 
     // Display all the employees whose salary is less than 5000
-    public static List<Employee> getAllEmployeesWithLessSalaryThan5000() {
-        //TODO Implement the method
-        return new ArrayList<>();
+    public static List<Employee> getAllEmployeesWithLessSalaryThan5000() {//--------------------->> 17.OK
+
+        return employeeService.readAll().stream()
+                .filter(employee -> employee.getSalary() < 5000)
+                .collect(Collectors.toList());
     }
 
     // Display all the employees whose salary is between 6000 and 7000
