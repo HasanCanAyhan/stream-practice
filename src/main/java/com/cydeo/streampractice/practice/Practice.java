@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Component
 public class Practice {
@@ -40,74 +41,92 @@ public class Practice {
     // Also, you can check all the methods in the ServiceImpl classes inside the service.impl package, they all have explanations.
 
     // Display all the employees
-    public static List<Employee> getAllEmployees() {
+    public static List<Employee> getAllEmployees() { //--------------------->> 1.OK
         return employeeService.readAll();
     }
 
     // Display all the countries
-    public static List<Country> getAllCountries() {
-        //TODO Implement the method
-        return new ArrayList<>();
+    public static List<Country> getAllCountries() {//--------------------->> 2.OK
+
+        return countryService.readAll();
     }
 
     // Display all the departments
-    public static List<Department> getAllDepartments() {
-        //TODO Implement the method
-        return new ArrayList<>();
+    public static List<Department> getAllDepartments() {//--------------------->> 3.OK
+
+        return departmentService.readAll();
     }
 
     // Display all the jobs
-    public static List<Job> getAllJobs() {
-        //TODO Implement the method
-        return new ArrayList<>();
+    public static List<Job> getAllJobs() {//--------------------->> 4.OK
+
+        return jobService.readAll();
     }
 
     // Display all the locations
-    public static List<Location> getAllLocations() {
-        //TODO Implement the method
-        return new ArrayList<>();
+    public static List<Location> getAllLocations() {//--------------------->> 5.OK
+
+        return locationService.readAll();
+
     }
 
     // Display all the regions
-    public static List<Region> getAllRegions() {
-        //TODO Implement the method
-        return new ArrayList<>();
+    public static List<Region> getAllRegions() {//--------------------->> 6.OK
+
+        return regionService.readAll();
+
     }
 
     // Display all the job histories
-    public static List<JobHistory> getAllJobHistories() {
-        //TODO Implement the method
-        return new ArrayList<>();
+    public static List<JobHistory> getAllJobHistories() {//--------------------->> 7.OK
+
+        return jobHistoryService.readAll();
     }
 
     // Display all the employees' first names
-    public static List<String> getAllEmployeesFirstName() {
-        //TODO Implement the method
-        return new ArrayList<>();
+    public static List<String> getAllEmployeesFirstName() {//--------------------->> 8.OK
+
+      return   employeeService.readAll().stream()
+                .map(Employee::getFirstName)
+                .collect(Collectors.toList());
+
     }
 
     // Display all the countries' names
-    public static List<String> getAllCountryNames() {
-        //TODO Implement the method
-        return new ArrayList<>();
+    public static List<String> getAllCountryNames() { //--------------------->> 9.OK
+       return countryService.readAll().stream()
+                .map(Country::getCountryName)
+               .collect(Collectors.toList());
+
     }
 
     // Display all the departments' managers' first names
-    public static List<String> getAllDepartmentManagerFirstNames() {
-        //TODO Implement the method
-        return new ArrayList<>();
+    public static List<String> getAllDepartmentManagerFirstNames() {//--------------------->> 10.OK
+
+        return departmentService.readAll().stream()
+                .map(Department::getManager)
+                .map(manager -> manager.getFirstName())
+                .collect(Collectors.toList());
+
+
     }
 
     // Display all the departments where manager name of the department is 'Steven'
-    public static List<Department> getAllDepartmentsWhichManagerFirstNameIsSteven() {
-        //TODO Implement the method
-        return new ArrayList<>();
+    public static List<Department> getAllDepartmentsWhichManagerFirstNameIsSteven() {//--------------------->> 11.OK
+
+        return departmentService.readAll().stream()
+                .filter(department -> department.getManager().getFirstName().equals("Steven"))
+                .collect(Collectors.toList());
+
     }
 
     // Display all the departments where postal code of the location of the department is '98199'
-    public static List<Department> getAllDepartmentsWhereLocationPostalCodeIs98199() {
-        //TODO Implement the method
-        return new ArrayList<>();
+    public static List<Department> getAllDepartmentsWhereLocationPostalCodeIs98199() {//--------------------->> 12.OK
+
+        return departmentService.readAll().stream()
+                .filter(department -> department.getLocation().getPostalCode().equals("98199"))
+                .collect(Collectors.toList());
+
     }
 
     // Display the region of the IT department
