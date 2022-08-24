@@ -206,9 +206,16 @@ public class Practice {
     // Display the maximum salary an employee gets
     public static Long getMaxSalary() throws Exception {//--------------------->> 20.OK
 
+        /*
         return employeeService.readAll().stream()
                 .sorted(Comparator.comparing(Employee::getSalary).reversed())
                 .findFirst().get().getSalary();
+
+
+         */
+        return employeeService.readAll().stream()
+                .map(Employee::getSalary)
+                .reduce(Long :: max).get();
 
     }
 
@@ -502,19 +509,7 @@ public class Practice {
     // Display the length of the longest full name(s)
     public static Integer getLongestNameLength() throws Exception {
         //--------------------->> 47. ??????????????
-
-        Integer l1 =  employeeService.readAll().stream()
-                .map(Employee::getFirstName)
-                .sorted(Comparator.comparing(String::length).reversed())
-                .map(String::length).findFirst().get();
-
-        Integer l2 =  employeeService.readAll().stream()
-                .map(Employee::getLastName)
-                .sorted(Comparator.comparing(String::length).reversed())
-                .map(String::length).findFirst().get();;
-
-        return l1+l2;
-
+        return  0;
     }
 
     // Display the employee(s) with the longest full name(s)
