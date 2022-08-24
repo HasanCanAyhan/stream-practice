@@ -199,8 +199,8 @@ public class Practice {
          return employeeService.readAll().stream()
                 .filter(employee -> employee.getFirstName().equals("Douglas") && employee.getLastName().equals("Grant"))
                 .map(employee -> employee.getSalary())
-                 .findFirst().get();
-
+                 .reduce(Long :: max).get();
+                 //.findFirst().get();
     }
 
     // Display the maximum salary an employee gets
