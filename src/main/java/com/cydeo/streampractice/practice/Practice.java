@@ -103,9 +103,11 @@ public class Practice {
     public static List<String> getAllDepartmentManagerFirstNames() {//--------------------->> 10.OK
 
         return departmentService.readAll().stream()
+                //.map(department -> department.getManager().getFirstName())
                 .map(Department::getManager)
-                .map(manager -> manager.getFirstName())
+                .map(Employee::getFirstName)
                 .collect(Collectors.toList());
+
 
 
     }
@@ -115,6 +117,7 @@ public class Practice {
 
         return departmentService.readAll().stream()
                 .filter(department -> department.getManager().getFirstName().equals("Steven"))
+                //.anyMatch(department -> department.getManager().getFirstName().equals("Steven"))
                 .collect(Collectors.toList());
 
     }
@@ -131,15 +134,18 @@ public class Practice {
     // Display the region of the IT department
     public static Region getRegionOfITDepartment() throws Exception {//--------------------->> 13.OK BUT review again???
 
-           List<Region> regions=     departmentService.readAll().stream()
+        Optional<Region> region = departmentService.readAll().stream()
                 .filter(department -> department.getDepartmentName().equals("IT"))
                 .map(department -> department.getLocation())
-                      .map(Location::getCountry)
-                      .map(country -> country.getRegion())
-                         .collect(Collectors.toList());
+                .map(location -> location.getCountry())
+                .map(country -> country.getRegion())
+                .findFirst();
 
+        if (region.isPresent()){
+            return region.get();
+        }
 
-           return regions.get(0);
+        return null;
     }
 
 
@@ -496,20 +502,18 @@ public class Practice {
     // Display the length of the longest full name(s)
     public static Integer getLongestNameLength() throws Exception {
         //--------------------->> 47. ??????????????
-        String l1 =  employeeService.readAll().stream()
-                .map(employee -> employee.getFirstName())
+
+        Integer l1 =  employeeService.readAll().stream()
+                .map(Employee::getFirstName)
                 .sorted(Comparator.comparing(String::length).reversed())
-                .findFirst().get();
+                .map(String::length).findFirst().get();
 
-
-        String l2 =  employeeService.readAll().stream()
-                .map(employee -> employee.getLastName())
+        Integer l2 =  employeeService.readAll().stream()
+                .map(Employee::getLastName)
                 .sorted(Comparator.comparing(String::length).reversed())
-                .findFirst().get();
+                .map(String::length).findFirst().get();;
 
-
-        return l1.length() + l2.length();
-
+        return l1+l2;
 
     }
 
