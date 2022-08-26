@@ -149,7 +149,7 @@ public class Practice1 {
     // Display all the departments where the region of department is 'Europe'
     public static List<Department> getAllDepartmentsWhereRegionOfCountryIsEurope() {//--------------------->> 14.OK
 
-       return departmentService.readAll().stream()
+       return getAllDepartments().stream()
                 .filter(department -> department.getLocation().getCountry().getRegion().getRegionName().equals("Europe"))
                 .collect(Collectors.toList());
 
@@ -158,8 +158,10 @@ public class Practice1 {
     // Display if there is any employee with salary less than 1000. If there is none, the method should return true
     public static boolean checkIfThereIsNoSalaryLessThan1000() {//--------------------->> 15.OK
 
-        return employeeService.readAll().stream()
-                .noneMatch(employee -> employee.getSalary() < 1000);
+        return !getAllEmployees().stream()
+                .anyMatch(employee -> employee.getSalary() < 1000);
+                //.allMatch(employee -> employee.getSalary() > 1000);
+                //.noneMatch(employee -> employee.getSalary() < 1000);
 
     }
 
