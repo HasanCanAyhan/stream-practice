@@ -213,9 +213,17 @@ public class Practice {
 
 
          */
+        /*
         return employeeService.readAll().stream()
                 .map(Employee::getSalary)
                 .reduce(Long :: max).get();
+         */
+
+
+        return getAllEmployees().stream()
+                .map(Employee::getSalary)
+                .mapToLong(i -> i)
+                .max().getAsLong();
 
     }
 
