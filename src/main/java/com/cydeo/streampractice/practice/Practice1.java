@@ -5,12 +5,14 @@ import com.cydeo.streampractice.service.*;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Component
-public class Practice {
+public class Practice1 {
 
     public static CountryService countryService;
     public static DepartmentService departmentService;
@@ -20,18 +22,18 @@ public class Practice {
     public static LocationService locationService;
     public static RegionService regionService;
 
-    public Practice(CountryService countryService, DepartmentService departmentService,
-                    EmployeeService employeeService, JobHistoryService jobHistoryService,
-                    JobService jobService, LocationService locationService,
-                    RegionService regionService) {
+    public Practice1(CountryService countryService, DepartmentService departmentService,
+                     EmployeeService employeeService, JobHistoryService jobHistoryService,
+                     JobService jobService, LocationService locationService,
+                     RegionService regionService) {
 
-        Practice.countryService = countryService;
-        Practice.departmentService = departmentService;
-        Practice.employeeService = employeeService;
-        Practice.jobHistoryService = jobHistoryService;
-        Practice.jobService = jobService;
-        Practice.locationService = locationService;
-        Practice.regionService = regionService;
+        Practice1.countryService = countryService;
+        Practice1.departmentService = departmentService;
+        Practice1.employeeService = employeeService;
+        Practice1.jobHistoryService = jobHistoryService;
+        Practice1.jobService = jobService;
+        Practice1.locationService = locationService;
+        Practice1.regionService = regionService;
 
     }
 
@@ -85,7 +87,7 @@ public class Practice {
     // Display all the employees' first names
     public static List<String> getAllEmployeesFirstName() {//--------------------->> 8.OK
 
-        return employeeService.readAll().stream()
+        return getAllEmployees().stream()
                 .map(Employee::getFirstName)
                 .collect(Collectors.toList());
 
@@ -93,7 +95,7 @@ public class Practice {
 
     // Display all the countries' names
     public static List<String> getAllCountryNames() { //--------------------->> 9.OK
-        return countryService.readAll().stream()
+        return getAllCountries().stream()
                 .map(Country::getCountryName)
                 .collect(Collectors.toList());
 
@@ -102,10 +104,8 @@ public class Practice {
     // Display all the departments' managers' first names
     public static List<String> getAllDepartmentManagerFirstNames() {//--------------------->> 10.OK
 
-        return departmentService.readAll().stream()
-                //.map(department -> department.getManager().getFirstName())
-                .map(Department::getManager)
-                .map(Employee::getFirstName)
+        return getAllDepartments().stream()
+                .map(department -> department.getManager().getFirstName())
                 .collect(Collectors.toList());
 
 
@@ -115,9 +115,8 @@ public class Practice {
     // Display all the departments where manager name of the department is 'Steven'
     public static List<Department> getAllDepartmentsWhichManagerFirstNameIsSteven() {//--------------------->> 11.OK
 
-        return departmentService.readAll().stream()
+        return getAllDepartments().stream()
                 .filter(department -> department.getManager().getFirstName().equals("Steven"))
-                //.anyMatch(department -> department.getManager().getFirstName().equals("Steven"))
                 .collect(Collectors.toList());
 
     }
@@ -125,7 +124,7 @@ public class Practice {
     // Display all the departments where postal code of the location of the department is '98199'
     public static List<Department> getAllDepartmentsWhereLocationPostalCodeIs98199() {//--------------------->> 12.OK
 
-        return departmentService.readAll().stream()
+        return getAllDepartments().stream()
                 .filter(department -> department.getLocation().getPostalCode().equals("98199"))
                 .collect(Collectors.toList());
 
@@ -134,18 +133,16 @@ public class Practice {
     // Display the region of the IT department
     public static Region getRegionOfITDepartment() throws Exception {//--------------------->> 13.OK
 
-        Optional<Region> region = departmentService.readAll().stream()
+        /*
+        return getAllDepartments().stream()
                 .filter(department -> department.getDepartmentName().equals("IT"))
-                .map(department -> department.getLocation())
-                .map(location -> location.getCountry())
-                .map(country -> country.getRegion())
-                .findFirst();
+                .findFirst().get().getLocation().getCountry().getRegion();
+         */
+        return getAllDepartments().stream()
+                .filter(department -> department.getDepartmentName().equals("IT"))
+                .findFirst().orElseThrow( ()-> new Exception("no department found!")  ).getLocation().getCountry().getRegion();
 
-        if (region.isPresent()){
-            return region.get();
-        }
 
-        return null;
     }
 
 
