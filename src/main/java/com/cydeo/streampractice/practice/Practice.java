@@ -508,15 +508,28 @@ public class Practice {
 
     // Display the length of the longest full name(s)
     public static Integer getLongestNameLength() throws Exception {
-        //--------------------->> 47. ??????????????
-        return  0;
+        //--------------------->> 47. OK
+
+        return getAllEmployeesFullNames().stream()
+                .map(String::length)
+                .reduce(Integer::max).orElse(-1);
+
+
+
     }
 
     // Display the employee(s) with the longest full name(s)
     public static List<Employee> getLongestNamedEmployee() {
-        //--------------------->> 48.
-        //TODO Implement the method
-        return new ArrayList<>();
+        //--------------------->> 48.?????
+
+        Integer max = getAllEmployeesFullNames().stream()
+                .map(String::length)
+                .reduce(Integer::max).get();
+
+        return employeeService.readAll().stream()
+                .filter(employee -> (employee.getFirstName().length() + employee.getLastName().length() == max))
+                .collect(Collectors.toList());
+
     }
 
     // Display all the employees whose department id is 90, 60, 100, 120, or 130
