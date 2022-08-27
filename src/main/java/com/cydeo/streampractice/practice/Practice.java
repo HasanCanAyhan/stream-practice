@@ -449,6 +449,7 @@ public class Practice {
 
         return jobHistoryService.readAll().stream()
                 .filter(jobHistory -> jobHistory.getStartDate().isEqual(LocalDate.of(2007,1,1)) && jobHistory.getEndDate().isEqual(LocalDate.of(2007,12,31)) )
+                .filter(jobHistory -> jobHistory.getDepartment().getDepartmentName().equals("Shipping"))
                 .map(JobHistory::getEmployee)
                 .findFirst().get();
 
@@ -515,27 +516,29 @@ public class Practice {
     }
 
     // Display the length of the longest full name(s)
-    public static Integer getLongestNameLength() throws Exception {
+    public static Integer getLongestNameLength()  {
         //--------------------->> 47. OK
 
+        /*
         return getAllEmployeesFullNames().stream()
                 .map(String::length)
                 .reduce(Integer::max).orElse(-1);
-
+         */
+        return getAllEmployeesFullNames().stream()
+                .max(Comparator.comparing(String::length))
+                .get().length();
 
 
     }
 
     // Display the employee(s) with the longest full name(s)
     public static List<Employee> getLongestNamedEmployee() {
-        //--------------------->> 48.?????
+        //--------------------->> 48.OK
 
-        Integer max = getAllEmployeesFullNames().stream()
-                .map(String::length)
-                .reduce(Integer::max).get();
-
-        return employeeService.readAll().stream()
-                .filter(employee -> (employee.getFirstName().length() + employee.getLastName().length() == max))
+        return getAllEmployees().stream()
+                .filter(employee ->
+                        employee.getFirstName().length() + employee.getLastName().length() + 1
+                                == getLongestNameLength())
                 .collect(Collectors.toList());
 
     }

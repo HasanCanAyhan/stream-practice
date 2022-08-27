@@ -9,6 +9,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Component
@@ -428,7 +429,10 @@ public class Practice1 {
     // Display the total number of the departments
     public static Long getTotalDepartmentsNumber() {//--------------------->> 34.OK
 
-        return departmentService.readAll().stream().count();
+        //return getAllDepartments().stream().count();
+
+        return (long)getAllDepartments().size();
+
 
     }
 
@@ -484,6 +488,7 @@ public class Practice1 {
 
         return jobHistoryService.readAll().stream()
                 .filter(jobHistory -> jobHistory.getStartDate().isEqual(LocalDate.of(2007,1,1)) && jobHistory.getEndDate().isEqual(LocalDate.of(2007,12,31)) )
+                .filter(jobHistory -> jobHistory.getDepartment().getDepartmentName().equals("Shipping"))
                 .map(JobHistory::getEmployee)
                 .findFirst().get();
 
@@ -534,8 +539,13 @@ public class Practice1 {
     public static List<String> getAllEmployeesInitials() {
         //--------------------->> 45.OK
         return employeeService.readAll().stream()
-                .map(employee -> employee.getFirstName().charAt(0) + "" + employee.getLastName().charAt(0))
-                .collect(Collectors.toList());
+                .map(employee -> {
+
+                    String firstInitial = employee.getFirstName().substring(0,1);
+                    String secondInitial = employee.getLastName().substring(0,1);
+
+                    return firstInitial+secondInitial;
+                }).collect(Collectors.toList());
 
     }
 
@@ -543,19 +553,24 @@ public class Practice1 {
     public static List<String> getAllEmployeesFullNames() {
         //--------------------->> 46.OK
         return employeeService.readAll().stream()
-                .map(employee -> employee.getFirstName() +" " + employee.getLastName())
-                .collect(Collectors.toList());
+                .map(employee -> {
+
+                    String firstName = employee.getFirstName();
+                    String lastName = employee.getLastName();
+
+                    return firstName+" "+ lastName;
+                }).collect(Collectors.toList());
 
 
     }
 
     // Display the length of the longest full name(s)
-    public static Integer getLongestNameLength() throws Exception {
+    public static Integer getLongestNameLength()  {
         //--------------------->> 47. OK
 
         return getAllEmployeesFullNames().stream()
-                .map(String::length)
-                .reduce(Integer::max).orElse(-1);
+                .max(Comparator.comparing(String::length))
+                .get().length();
 
 
 
@@ -563,16 +578,13 @@ public class Practice1 {
 
     // Display the employee(s) with the longest full name(s)
     public static List<Employee> getLongestNamedEmployee() {
-        //--------------------->> 48.?????
+        //--------------------->> 48.OK
 
-        Integer max = getAllEmployeesFullNames().stream()
-                .map(String::length)
-                .reduce(Integer::max).get();
-
-        return employeeService.readAll().stream()
-                .filter(employee -> (employee.getFirstName().length() + employee.getLastName().length() == max))
+        return getAllEmployees().stream()
+                .filter(employee ->
+                        employee.getFirstName().length() + employee.getLastName().length() + 1
+                                == getLongestNameLength())
                 .collect(Collectors.toList());
-
     }
 
     // Display all the employees whose department id is 90, 60, 100, 120, or 130
@@ -593,12 +605,11 @@ public class Practice1 {
     public static List<Employee> getAllEmployeesDepartmentIdIsNot90or60or100or120or130() {
         //--------------------->> 50.OK
         return employeeService.readAll().stream()
-                .filter(employee -> !(employee.getDepartment().getId().equals(90l) ||
-                        employee.getDepartment().getId().equals(60l) ||
-                        employee.getDepartment().getId().equals(100l) ||
-                        employee.getDepartment().getId().equals(120l)||
-                        employee.getDepartment().getId().equals(130l) ))
+                .filter( employee -> !getAllEmployeesDepartmentIdIsNot90or60or100or120or130().contains(employee))
                 .collect(Collectors.toList());
+
+
+
 
     }
 
